@@ -1,9 +1,12 @@
 import seaborn as sns
 from faicons import icon_svg
-
+import plotly.express as px
 from shiny import reactive
 from shiny.express import input, render, ui
 import palmerpenguins 
+from shinywidgets import render_plotly
+import importlib
+
 
 #load penguins dataset
 df = palmerpenguins.load_penguins()
@@ -53,57 +56,43 @@ with ui.sidebar(title="Filter controls"):
 
 #create columns for the box of data for the statistics
 with ui.layout_column_wrap(fill=False):
-    with ui.value_box(showcase=icon_svg("earlybirds")style=,"font-weight:bold;color:red; background-color: blue;"):
+    with ui.value_box(showcase=icon_svg("snowman")):
         "Number of penguins"
 
         @render.text
         def count():
-            return filtered_df().shape[0]
-#display average bill length
-    with ui.value_box(showcase=icon_svg("ruler-horizontal")style=,"font-weight:bold;color:red; background-color: blue;"):
+            return filtered_df().shape
+
+    with ui.value_box(showcase=icon_svg("snowflake")):
         "Average bill length"
 
         @render.text
         def bill_length():
             return f"{filtered_df()['bill_length_mm'].mean():.1f} mm"
-#display average bill depth
-    with ui.value_box(showcase=icon_svg("ruler-vertical")style=,"font-weight:bold;color:red; background-color: blue;"):
+
+    with ui.value_box(showcase=icon_svg("ruler-vertical")):
         "Average bill depth"
 
         @render.text
         def bill_depth():
             return f"{filtered_df()['bill_depth_mm'].mean():.1f} mm"
 
-#create columns to display the data
+
 with ui.layout_columns():
     with ui.card(full_screen=True):
-        ui.card_header("Bill length and depth")
-#create a scatterplot
-        @render.plot
-        def length_depth():
-            return sns.scatterplot(
-                data=filtered_df(),
-                x="bill_length_mm",
-                y="bill_depth_mm",
-                color="species",
-            )
-#create columns to display the data
-with ui.layout_columns():
-    with ui.card(full_screen=True):
-        ui.card_header("Plotly Chart")
-#create a plotly chart
-        @render.plotly
+        ui.card_header("Bill Length vs. Bill Depth")
+
+        @render_plotly
         def length_depth_plotly():
             return px.histogram(
-                data=filtered_df(),
+                data_frame=filtered_df(),
                 x="bill_length_mm",
                 y="bill_depth_mm",
                 color="species",
             )
-    
-#create a summery for the statistics of the penguin data
+
     with ui.card(full_screen=True):
-        ui.card_header("Penguin data")
+        ui.card_header("Arsh Penguin Data")
 
         @render.data_frame
         def summary_statistics():
@@ -115,7 +104,6 @@ with ui.layout_columns():
                 "body_mass_g",
             ]
             return render.DataGrid(filtered_df()[cols], filters=True)
-
 
 #ui.include_css(app_dir / "styles.css")
 
