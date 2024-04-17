@@ -1,4 +1,4 @@
- import seaborn as sns
+import seaborn as sns
 from faicons import icon_svg
 import plotly.express as px
 from shiny import reactive
