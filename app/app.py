@@ -1,4 +1,4 @@
-import seaborn as sns
+ import seaborn as sns
 from faicons import icon_svg
 import plotly.express as px
 from shiny import reactive
@@ -6,7 +6,10 @@ from shiny.express import input, render, ui
 import palmerpenguins 
 from shinywidgets import render_plotly
 import importlib
+from shinyswatch import theme
+import shinyswatch
 
+shinyswatch.theme.darkly()
 
 #load penguins dataset
 df = palmerpenguins.load_penguins()
@@ -70,7 +73,7 @@ with ui.layout_column_wrap(fill=False):
         def bill_length():
             return f"{filtered_df()['bill_length_mm'].mean():.1f} mm"
 
-    with ui.value_box(showcase=icon_svg("ruler-vertical")):
+    with ui.value_box(showcase=icon_svg("snowflake")):
         "Average bill depth"
 
         @render.text
